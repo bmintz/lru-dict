@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# encoding: utf-8
+
 import gc
 import random
 import sys
@@ -211,6 +214,20 @@ class TestLRU(unittest.TestCase):
         self.assertRaises(KeyError, lambda: l['2'])
         with self.assertRaises(KeyError):
             del l['2']
+
+    def test_pop(self):
+        l = LRU(2)
+        l[1] = '1'
+        self.assertEqual(l.pop(1), '1')
+        self.assertNotIn(1, l)
+        with self.assertRaises(KeyError):
+            l.pop(1)
+        with self.assertRaises(KeyError):
+            l.pop(2)
+        self.assertEqual(l.pop(1, '2'), '2')
+        l[1] = '1'
+        self.assertEqual(l.pop(1, '2'), '1')
+        self.assertNotIn(1, l)
 
     def test_stats(self):
         for size in SIZES:
